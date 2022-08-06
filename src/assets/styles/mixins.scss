@@ -1,0 +1,10 @@
+@mixin containerBtn {
+  display: flex;
+  gap: 20px;
+}
+
+@mixin formBtnGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px
+}
