@@ -1,5 +1,5 @@
 import './Сontacts.scss';
-import {useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 import { Table, Button, Popconfirm, Typography } from 'antd';
@@ -8,9 +8,11 @@ import ModalForm from '../../Modal/ModalForm/ModalForm';
 import ContactAdd from './ContactAdd/ContactAdd';
 import ContactEdit from './ContactEdit/ContactEdit';
 
-import originData from '../../../utils/json/contacts.json';
-
 interface IСontacts {
+  getContacts: () => void;
+  contactsUserMass: IMassСontacts[];
+}
+interface IMassСontacts {
   key: number;
   name: string;
   tel: string;
@@ -21,30 +23,19 @@ type EditableTableProps = Parameters<typeof Table>[0];
 
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 
-const Сontacts: React.FC = (
-  {
-    // handleAllUsers,
-    // usersObj,
-    // userLang,
-    // handleDellUserUnderAdmin,
-  },
-) => {
-  const [dataSource, setDataSource] = useState<IСontacts[]>(originData);
+const Сontacts: React.FC<IСontacts> = ({
+  getContacts,
+  contactsUserMass,
+  // handleDellUserUnderAdmin,
+}) => {
   const [visibleModalAddUser, setVisibleModalAddUser] = useState(false);
   const [visibleModalEditUser, setVisibleModalEditUser] = useState(false);
   const [oneUser, setOneUser] = useState(null);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   handleAllUsers(token);
-  // }, [handleAllUsers]);
-
-  // useEffect(() => {
-  //   if (usersObj) {
-  //     setDataSource(usersObj);
-  //   }
-  // }, [usersObj]);
+  useEffect(() => {
+    getContacts();
+  }, [getContacts]);
 
   const handleModalAddUserCancel = () => {
     setVisibleModalAddUser(false);
@@ -66,8 +57,6 @@ const Сontacts: React.FC = (
     //     console.log(err);
     //   });
   };
-
-    
 
   const handlerTransitionHome = () => {
     navigate('/home');
@@ -94,7 +83,7 @@ const Сontacts: React.FC = (
       dataIndex: 'operation',
       width: '30%',
       render: (_, record) =>
-        dataSource.length >= 1 ? (
+        contactsUserMass.length >= 1 ? (
           <div className="contacts-container__table-operation">
             <Typography.Link
               onClick={() => {
@@ -150,7 +139,7 @@ const Сontacts: React.FC = (
         {visibleModalAddUser && (
           <ModalForm
             visible={visibleModalAddUser}
-            title='Добавление контакта'
+            title="Добавление контакта"
             handleModalCancel={handleModalAddUserCancel}
             footer={null}>
             <ContactAdd />
@@ -160,7 +149,7 @@ const Сontacts: React.FC = (
         {oneUser && (
           <ModalForm
             visible={visibleModalEditUser}
-            title='Добавление контакта'
+            title="Добавление контакта"
             handleModalCancel={handleModalEditUserCancel}
             footer={null}>
             <ContactEdit oneUser={oneUser} />
@@ -169,11 +158,9 @@ const Сontacts: React.FC = (
 
         <Table
           bordered
-          dataSource={dataSource}
+          dataSource={contactsUserMass}
           // @ts-ignore
           columns={columns}
-          // @ts-ignore
-          rowKey={(record) => record.key}
         />
       </div>
     </>
@@ -182,17 +169,15 @@ const Сontacts: React.FC = (
 
 export default inject(({ UserStore }) => {
   const {
-    usersObj,
-    handleAllUsers,
-    userLang,
+    getContacts,
+    IMassСontacts,
     handleEditUserInfoAdmin,
     handleDellUserUnderAdmin,
   } = UserStore;
 
   return {
-    usersObj,
-    handleAllUsers,
-    userLang,
+    getContacts,
+    IMassСontacts,
     handleEditUserInfoAdmin,
     handleDellUserUnderAdmin,
   };

@@ -10,8 +10,7 @@ function App() {
       <RouteMenu
         getUsers={function (): void {
           throw new Error('Function not implemented.');
-        }}
-      />
+        } } loggedIn={false}      />
     </div>
   );
 }

@@ -1,12 +1,23 @@
 import { Button, Form, Input } from 'antd';
+
 import { inject, observer } from 'mobx-react';
+import { useNavigate } from 'react-router-dom';
 import './Login.scss';
 
-const Login: React.FC = () => {
+interface ILogin {
+  handleLogin: (email: string, username: string) => void;
+}
+
+const Login: React.FC<ILogin> = ({ handleLogin }) => {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
 
-  const onFinish = () => {
-    console.log(1111);
+  const onFinish = async (values: { email: string; username: string }) => {
+    await handleLogin(values.email, values.username)
+    //@ts-ignore
+      .then(() => navigate('/home'))
+      .catch((err: any) => console.log(err));
+
   };
 
   return (
@@ -16,7 +27,6 @@ const Login: React.FC = () => {
         name="login"
         onFinish={onFinish}
         scrollToFirstError
-        // className="login__form"
         initialValues={{
           email: '',
           password: '',
@@ -68,9 +78,9 @@ const Login: React.FC = () => {
 };
 
 export default inject(({ UserStore }) => {
-  const { getUsers } = UserStore;
+  const { handleLogin } = UserStore;
 
   return {
-    getUsers,
+    handleLogin,
   };
 })(observer(Login));

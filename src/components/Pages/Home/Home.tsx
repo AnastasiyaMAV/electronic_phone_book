@@ -1,8 +1,21 @@
 import { Button, Card } from 'antd';
+import { inject, observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
 import './Home.scss';
 
-const Home: React.FC = () => {
+interface IUser {
+  userName: string;
+  userEmail: string;
+  userUsername: string;
+  logOut: () => void;
+}
+
+const Home: React.FC<IUser> = ({
+  userName,
+  userEmail,
+  userUsername,
+  logOut,
+}) => {
   const navigate = useNavigate();
 
   const handlerTransitionContacts = () => {
@@ -11,14 +24,15 @@ const Home: React.FC = () => {
 
   const handlerTransitionOut = () => {
     navigate('/login');
+    logOut();
   };
 
   return (
     <Card title="Добро пожаловать!" bordered={false} style={{ width: 300 }}>
-      <p>Имя</p>
-      <p>Ник</p>
-      <p>Email</p>
-      <div className='home-container__btn'>
+      <p>{userName}</p>
+      <p>{userUsername}</p>
+      <p>{userEmail}</p>
+      <div className="home-container__btn">
         <Button type="primary" onClick={handlerTransitionContacts}>
           Перейти в контакты
         </Button>
@@ -30,4 +44,13 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default inject(({ UserStore }) => {
+  const { userName, userEmail, userUsername, logOut } = UserStore;
+
+  return {
+    userName,
+    userEmail,
+    userUsername,
+    logOut,
+  };
+})(observer(Home));
