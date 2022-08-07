@@ -2,13 +2,20 @@ import './ContactEdit.scss';
 import { inject, observer } from 'mobx-react';
 import { Form, Input, Tooltip, Button } from 'antd';
 
-interface IContactEdit {
-  oneUser: Record<string, string | number>;
+interface IСontacts {
+  key: number;
+  name: string;
+  tel: string;
+  email: string;
 }
 
-const ContactEdit: React.FC <IContactEdit> = (
+interface IContactEditProps {
+  oneContact: IСontacts;
+}
+
+const ContactEdit: React.FC <IContactEditProps> = (
   {
-    oneUser,
+    oneContact,
     // loading,
     // errload,
     // setErrload,
@@ -18,6 +25,8 @@ const ContactEdit: React.FC <IContactEdit> = (
   },
 ) => {
   const [form] = Form.useForm();
+  console.log('oneContact  ', oneContact);
+  
 
   // useEffect(() => {
   //   setErrload();
@@ -29,7 +38,6 @@ const ContactEdit: React.FC <IContactEdit> = (
 
   const onFinish = async (values: any) => {
     console.log('valuesEdit', values);
-    // const token = localStorage.getItem('token');
     // await handleEditUserInfoUnderAdmin(
       // oneUser.key,
     //   values.name,
@@ -54,9 +62,9 @@ const ContactEdit: React.FC <IContactEdit> = (
         scrollToFirstError
         className="contactEdit-container"
         initialValues={{
-          name: oneUser.name,
-          email: oneUser.email,
-          tel: oneUser.tel,
+          name: oneContact?.name,
+          email: oneContact?.email,
+          tel: oneContact?.tel,
         }}>
         <Tooltip placement="rightBottom" title="Имя">
           <Form.Item

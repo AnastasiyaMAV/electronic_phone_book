@@ -7,7 +7,7 @@ interface IUser {
 }
 
 export default class UserStore {
-  usersMass = [];
+  usersArr = [];
   userOne: IUser | never[] = {
     email: '',
     name: '',
@@ -18,7 +18,7 @@ export default class UserStore {
   userEmail = '';
   userUsername = '';
 
-  contactsUserMass = [];
+  userContacts = [];
 
   userAdmin = false;
   userLang = 'RU';
@@ -53,7 +53,7 @@ export default class UserStore {
       })
       .then((response) => {
         runInAction(() => {
-          this.usersMass = response;
+          this.usersArr = response;
         });
       })
       .catch((err) => {
@@ -70,7 +70,7 @@ export default class UserStore {
     this.loading = true;
     this.errload = '';
     runInAction(() => {
-      this.userOne = this.usersMass.filter(
+      this.userOne = this.usersArr.filter(
         (user: { username: string; email: string }) => {
           return user.username === username && user.email === email;
         },
@@ -116,7 +116,7 @@ export default class UserStore {
       })
       .then((response) => {
         runInAction(() => {
-          this.contactsUserMass = response;
+          this.userContacts = response;
         });
         console.log(response);
       })

@@ -3,14 +3,14 @@ import { inject, observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
 import './Home.scss';
 
-interface IUser {
+interface IHomeProps {
   userName: string;
   userEmail: string;
   userUsername: string;
   logOut: () => void;
 }
 
-const Home: React.FC<IUser> = ({
+const Home: React.FC<IHomeProps> = ({
   userName,
   userEmail,
   userUsername,

@@ -7,50 +7,47 @@ import { Table, Button, Popconfirm, Typography } from 'antd';
 import ModalForm from '../../Modal/ModalForm/ModalForm';
 import ContactAdd from './ContactAdd/ContactAdd';
 import ContactEdit from './ContactEdit/ContactEdit';
+import { ColumnsType } from 'antd/lib/table';
 
-interface IСontacts {
+interface IContactProps {
   getContacts: () => void;
-  contactsUserMass: IMassСontacts[];
+  userContacts: IСontacts[];
 }
-interface IMassСontacts {
+interface IСontacts {
   key: number;
   name: string;
   tel: string;
   email: string;
 }
 
-type EditableTableProps = Parameters<typeof Table>[0];
-
-type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
-
-const Сontacts: React.FC<IСontacts> = ({
+const Сontacts: React.FC<IContactProps> = ({
   getContacts,
-  contactsUserMass,
+  userContacts,
   // handleDellUserUnderAdmin,
 }) => {
-  const [visibleModalAddUser, setVisibleModalAddUser] = useState(false);
-  const [visibleModalEditUser, setVisibleModalEditUser] = useState(false);
-  const [oneUser, setOneUser] = useState(null);
+  const [isAddContactModal, setIsAddContactModal] = useState(false);
+  const [isEditContactModal, setIsEditContactModal] = useState(false);
+  const [oneContact, setOneContact] = useState<IСontacts | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     getContacts();
   }, [getContacts]);
 
-  const handleModalAddUserCancel = () => {
-    setVisibleModalAddUser(false);
+  const handleModalAddContactCancel = () => {
+    setIsAddContactModal(false);
   };
 
-  const handleModalEditUserCancel = () => {
-    setVisibleModalEditUser(false);
-    setOneUser(null);
+  const handleModalEditContactCancel = () => {
+    setIsEditContactModal(false);
+    setOneContact(null);
   };
 
   const handleDelete = async (_id: number) => {
     console.log('dell');
     // await handleDellUserUnderAdmin(token, key)
     //   .then(() => {
-    //     const newData = dataSource.filter((item) => item.key !== key);
+    //     const newData = userContacts.filter((item) => item.key !== key);
     //     setDataSource(newData);
     //   })
     //   .catch((err) => {
@@ -62,40 +59,26 @@ const Сontacts: React.FC<IСontacts> = ({
     navigate('/home');
   };
 
-  const defaultColumns: (ColumnTypes[number] & { dataIndex: string })[] = [
-    {
-      title: 'Имя',
-      dataIndex: 'name',
-      width: '20%',
-    },
-    {
-      title: 'Почта',
-      dataIndex: 'email',
-      width: '30%',
-    },
-    {
-      title: 'Телефон',
-      dataIndex: 'tel',
-      width: '15%',
-    },
+  const columns: ColumnsType<IСontacts> = [
+    { title: 'Имя', dataIndex: 'name', key: 'name', width: '20%' },
+    { title: 'Почта', dataIndex: 'email', key: 'email', width: '30%' },
+    { title: 'Телефон', dataIndex: 'tel', key: 'tel', width: '15%' },
     {
       title: '',
       dataIndex: 'operation',
       width: '30%',
       render: (_, record) =>
-        contactsUserMass.length >= 1 ? (
+        userContacts.length >= 1 ? (
           <div className="contacts-container__table-operation">
             <Typography.Link
               onClick={() => {
-                setVisibleModalEditUser(true);
-                // @ts-ignore
-                setOneUser(record);
+                setIsEditContactModal(true);
+                setOneContact(record);
               }}>
               Редактировать
             </Typography.Link>
             <Popconfirm
               title="Вы уверенны, что хотите удалить контакт?"
-              // @ts-ignore
               onConfirm={() => handleDelete(record.key)}>
               <Typography.Link>Удалить</Typography.Link>
             </Popconfirm>
@@ -103,23 +86,12 @@ const Сontacts: React.FC<IСontacts> = ({
         ) : null,
     },
   ];
-
-  const columns = defaultColumns.map((col) => ({
-    ...col,
-    // @ts-ignore
-    onCell: (record) => ({
-      record,
-      dataindex: col.dataIndex,
-      title: col.title,
-    }),
-  }));
-
   return (
     <>
       <div className="contacts-container">
         <div className="contacts-container__btn">
           <Button
-            onClick={() => setVisibleModalAddUser(true)}
+            onClick={() => setIsAddContactModal(true)}
             type="primary"
             style={{
               marginBottom: 16,
@@ -136,32 +108,27 @@ const Сontacts: React.FC<IСontacts> = ({
           </Button>
         </div>
 
-        {visibleModalAddUser && (
+        {isAddContactModal && (
           <ModalForm
-            visible={visibleModalAddUser}
+            visible={isAddContactModal}
             title="Добавление контакта"
-            handleModalCancel={handleModalAddUserCancel}
+            handleModalCancel={handleModalAddContactCancel}
             footer={null}>
             <ContactAdd />
           </ModalForm>
         )}
 
-        {oneUser && (
+        {oneContact && (
           <ModalForm
-            visible={visibleModalEditUser}
-            title="Добавление контакта"
-            handleModalCancel={handleModalEditUserCancel}
+            visible={isEditContactModal}
+            title="Редактирование контакта"
+            handleModalCancel={handleModalEditContactCancel}
             footer={null}>
-            <ContactEdit oneUser={oneUser} />
+            <ContactEdit oneContact={oneContact} />
           </ModalForm>
         )}
 
-        <Table
-          bordered
-          dataSource={contactsUserMass}
-          // @ts-ignore
-          columns={columns}
-        />
+        <Table bordered dataSource={userContacts} columns={columns} />
       </div>
     </>
   );
@@ -170,14 +137,14 @@ const Сontacts: React.FC<IСontacts> = ({
 export default inject(({ UserStore }) => {
   const {
     getContacts,
-    IMassСontacts,
+    userContacts,
     handleEditUserInfoAdmin,
     handleDellUserUnderAdmin,
   } = UserStore;
 
   return {
     getContacts,
-    IMassСontacts,
+    userContacts,
     handleEditUserInfoAdmin,
     handleDellUserUnderAdmin,
   };

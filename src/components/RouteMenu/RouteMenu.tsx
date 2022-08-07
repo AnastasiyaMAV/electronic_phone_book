@@ -7,12 +7,12 @@ import Home from '../Pages/Home/Home';
 import Сontacts from '../Pages/Сontacts/Сontacts';
 import './RouteMenu.scss';
 
-interface IRouteMenu {
+interface IRouteMenuProps {
   getUsers: () => void;
   loggedIn: boolean;
 }
 
-const RouteMenu: React.FC<IRouteMenu> = ({ getUsers, loggedIn }) => {
+const RouteMenu: React.FC<IRouteMenuProps> = ({ getUsers, loggedIn }) => {
   useEffect(() => {
     getUsers();
   }, [getUsers]);
@@ -54,7 +54,7 @@ const RouteMenu: React.FC<IRouteMenu> = ({ getUsers, loggedIn }) => {
             loggedIn ? (
               <Сontacts getContacts={function (): void {
                 throw new Error('Function not implemented.');
-              } } contactsUserMass={[]}/>
+              } } userContacts={[]}/>
             ) : (
               <Login
                 handleLogin={function (email: string, username: string): void {
@@ -64,23 +64,6 @@ const RouteMenu: React.FC<IRouteMenu> = ({ getUsers, loggedIn }) => {
             )
           }
         />
-{/* 
-        <Route
-          path="*"
-          element={
-            loggedIn ? (
-              <Home userName={''} userEmail={''} userUsername={''} logOut={function (): void {
-                throw new Error('Function not implemented.');
-              } } />
-            ) : (
-              <Login
-                handleLogin={function (email: string, username: string): void {
-                  throw new Error('Function not implemented.');
-                }}
-              />
-            )
-          }
-        /> */}
         <Route path="*" element={<Empty />} />
       </Routes>
     </Router>
