@@ -150,7 +150,7 @@ export default class UserStore {
   };
 
   handleEditContact = async (
-    key: number,
+    id: number,
     name: string,
     email: string,
     tel: string,
@@ -158,29 +158,24 @@ export default class UserStore {
     this.loading = true;
     this.errload = false;
 
-    await fetch(`http://localhost:3000/${this.userUsername}`, {
-      method: 'POST',
+    await fetch(`http://localhost:3001/${this.userUsername}/${id}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
       },
       body: JSON.stringify({
-        key,
+        id,
         name,
         email,
         tel,
       }),
     })
-      .then((response) => {
-        console.log(response);
-
-        // runInAction(() => {
-        //   this.userOneObj = res;
-        //   this.usersObj = null;
-        //   this.successLoad = successMessage.editUser;
-        // });
+      .then(() => {
+        this.getContacts();
       })
       .catch((err) => {
         console.log(err);
+        this.errload = true;
       })
       .finally(() => {
         runInAction(() => {
@@ -189,34 +184,62 @@ export default class UserStore {
       });
   };
 
-  // handleGetUserInfo = async (token) => {
-  //   await getUserInfo(token)
-  //     .then((res) => {
-  //       localStorage.setItem('lang', res.lang);
+  handleAddContact = async (
+    name: string,
+    email: string,
+    tel: string,
+  ) => {
+    this.loading = true;
+    this.errload = false;
 
-  //       runInAction(() => {
-  //         this.userId = res._id;
-  //         this.userName = res.name;
-  //         this.userEmail = res.email;
-  //         this.userAdmin = res.admin;
-  //         this.userLang = res.lang;
-  //         this.loggedIn = true;
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
+    await fetch(`http://localhost:3001/${this.userUsername}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        tel,
+      }),
+    })
+      .then(() => {
+        this.getContacts();
+      })
+      .catch((err) => {
+        console.log(err);
+        this.errload = true;
+      })
+      .finally(() => {
+        runInAction(() => {
+          this.loading = false;
+        });
+      });
+  };
 
-  // setErrload = () => {
-  //   runInAction(() => {
-  //     this.errload = '';
-  //   });
-  // };
+  handleDelleteContact = async (
+    id: number,
+  ) => {
+    this.loading = true;
+    this.errload = false;
 
-  // setSuccessLoad = () => {
-  //   runInAction(() => {
-  //     this.successLoad = '';
-  //   });
-  // };
+    await fetch(`http://localhost:3001/${this.userUsername}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+    })
+      .then(() => {
+        this.getContacts();
+      })
+      .catch((err) => {
+        console.log(err);
+        this.errload = true;
+      })
+      .finally(() => {
+        runInAction(() => {
+          this.loading = false;
+        });
+      });
+  };
 }

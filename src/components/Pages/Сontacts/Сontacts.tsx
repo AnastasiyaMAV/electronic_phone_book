@@ -1,5 +1,5 @@
 import './Сontacts.scss';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 import {
@@ -10,27 +10,27 @@ import {
   InputRef,
   Input,
   Space,
+  Modal,
 } from 'antd';
 
-import ModalForm from '../../ModalForm/ModalForm';
-import ContactAdd from './ContactAdd/ContactAdd';
-import ContactEdit from './ContactEdit/ContactEdit';
 import { ColumnsType } from 'antd/lib/table';
 import { ColumnType, FilterConfirmProps } from 'antd/lib/table/interface';
 
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import Loading from '../../Loading/Loading';
-import Errload from '../../Errload/Errload';
+import ContactEditAdd from './ContactEditAdd';
+import Loading from '../../Loading';
+import Errload from '../../Errload';
 
 interface IContactProps {
   getContacts: () => void;
   userContacts: IСontacts[];
   loading: boolean;
   errload: boolean;
+  handleDelleteContact: (id: number) => void;
 }
 interface IСontacts {
-  key: number;
+  id: number;
   name: string;
   tel: string;
   email: string;
@@ -43,7 +43,7 @@ const Сontacts: React.FC<IContactProps> = ({
   userContacts,
   loading,
   errload,
-  // handleDellUserUnderAdmin,
+  handleDelleteContact,
 }) => {
   const [isAddContactModal, setIsAddContactModal] = useState(false);
   const [isEditContactModal, setIsEditContactModal] = useState(false);
@@ -64,16 +64,16 @@ const Сontacts: React.FC<IContactProps> = ({
     setOneContact(null);
   };
 
-  const handleDelete = async (_id: number) => {
-    console.log('dell');
-    // await handleDellUserUnderAdmin(token, key)
-    //   .then(() => {
-    //     const newData = userContacts.filter((item) => item.key !== key);
-    //     setDataSource(newData);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+  const onToggleModalAdd = useCallback(() => {
+    setIsAddContactModal((prevState) => !prevState);
+  }, []);
+
+  const onToggleModalEdit = useCallback(() => {
+    setIsEditContactModal((prevState) => !prevState);
+  }, []);
+
+  const handleDelete = (id: number) => {
+    handleDelleteContact(id);
   };
 
   const handlerTransitionHome = () => {
@@ -108,7 +108,7 @@ const Сontacts: React.FC<IContactProps> = ({
       <div style={{ padding: 8 }}>
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={'Введите значение для поиска'}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -212,7 +212,7 @@ const Сontacts: React.FC<IContactProps> = ({
             </Typography.Link>
             <Popconfirm
               title="Вы уверенны, что хотите удалить контакт?"
-              onConfirm={() => handleDelete(record.key)}>
+              onConfirm={() => handleDelete(record.id)}>
               <Typography.Link>Удалить</Typography.Link>
             </Popconfirm>
           </div>
@@ -220,63 +220,72 @@ const Сontacts: React.FC<IContactProps> = ({
     },
   ];
 
-  if (loading) {
-    return <Loading />;
-  }
-
   if (errload) {
     return <Errload />;
   }
 
   return (
     <>
-      <div className="contacts-container">
-        <div className="contacts-container__btn">
-          <Button
-            onClick={() => setIsAddContactModal(true)}
-            type="primary"
-            style={{
-              marginBottom: 16,
-            }}>
-            Добавить контакт
-          </Button>
-          <Button
-            onClick={handlerTransitionHome}
-            type="primary"
-            style={{
-              marginBottom: 16,
-            }}>
-            На главную
-          </Button>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className="contacts-container">
+          <div className="contacts-container__btn">
+            <Button
+              onClick={() => setIsAddContactModal(true)}
+              type="primary"
+              style={{
+                marginBottom: 16,
+              }}>
+              Добавить контакт
+            </Button>
+            <Button
+              onClick={handlerTransitionHome}
+              type="primary"
+              style={{
+                marginBottom: 16,
+              }}>
+              На главную
+            </Button>
+          </div>
+
+          {isAddContactModal && (
+            <Modal
+              visible={isAddContactModal}
+              title="Добавление контакта"
+              onCancel={handleModalAddContactCancel}
+              footer={null}>
+              <ContactEditAdd
+                loading={false}
+                onToggleModal={onToggleModalAdd}
+              />
+            </Modal>
+          )}
+
+          {isEditContactModal && (
+            <Modal
+              visible={isEditContactModal}
+              title="Редактирование контакта"
+              onCancel={handleModalEditContactCancel}
+              footer={null}>
+              {oneContact && (
+                <ContactEditAdd
+                  oneContact={oneContact}
+                  loading={false}
+                  onToggleModal={onToggleModalEdit}
+                />
+              )}
+            </Modal>
+          )}
+
+          <Table
+            bordered
+            dataSource={userContacts}
+            columns={columns}
+            rowKey={(record) => record.id}
+          />
         </div>
-
-        {isAddContactModal && (
-          <ModalForm
-            visible={isAddContactModal}
-            title="Добавление контакта"
-            handleModalCancel={handleModalAddContactCancel}
-            footer={null}>
-            <ContactAdd />
-          </ModalForm>
-        )}
-
-        {oneContact && (
-          <ModalForm
-            visible={isEditContactModal}
-            title="Редактирование контакта"
-            handleModalCancel={handleModalEditContactCancel}
-            footer={null}>
-            <ContactEdit
-              oneContact={oneContact}
-              handleEditContact={function (): void {
-                throw new Error('Function not implemented.');
-              }}
-            />
-          </ModalForm>
-        )}
-
-        <Table bordered dataSource={userContacts} columns={columns} />
-      </div>
+      )}
     </>
   );
 };
@@ -287,8 +296,7 @@ export default inject(({ UserStore }) => {
     userContacts,
     loading,
     errload,
-    handleEditUserInfoAdmin,
-    handleDellUserUnderAdmin,
+    handleDelleteContact,
   } = UserStore;
 
   return {
@@ -296,7 +304,6 @@ export default inject(({ UserStore }) => {
     userContacts,
     loading,
     errload,
-    handleEditUserInfoAdmin,
-    handleDellUserUnderAdmin,
+    handleDelleteContact,
   };
 })(observer(Сontacts));

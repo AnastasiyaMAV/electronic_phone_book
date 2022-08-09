@@ -29,25 +29,27 @@ const Home: React.FC<IHomeProps> = ({
     navigate('/');
     logOut();
   };
-  
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
-    <Card title="Добро пожаловать!" bordered={false} style={{ width: 300 }}>
-      <p>{userName}</p>
-      <p>{userUsername}</p>
-      <p>{userEmail}</p>
-      <div className="home-container__btn">
-        <Button type="primary" onClick={handlerTransitionContacts}>
-          Перейти в контакты
-        </Button>
-        <Button type="primary" onClick={handlerTransitionOut}>
-          Выйти
-        </Button>
-      </div>
-    </Card>
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Card title="Добро пожаловать!" bordered={false} style={{ width: 300 }}>
+          <p>{userName}</p>
+          <p>{userUsername}</p>
+          <p>{userEmail}</p>
+          <div className="home-container__btn">
+            <Button type="primary" onClick={handlerTransitionContacts}>
+              Перейти в контакты
+            </Button>
+            <Button type="primary" onClick={handlerTransitionOut}>
+              Выйти
+            </Button>
+          </div>
+        </Card>
+      )}
+    </>
   );
 };
 
@@ -59,6 +61,6 @@ export default inject(({ UserStore }) => {
     userEmail,
     userUsername,
     logOut,
-    loading
+    loading,
   };
 })(observer(Home));

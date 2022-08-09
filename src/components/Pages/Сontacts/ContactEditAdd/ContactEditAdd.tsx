@@ -1,49 +1,46 @@
-import './ContactEdit.scss';
+import './ContactEditAdd.scss';
 import { inject, observer } from 'mobx-react';
 import { Form, Input, Tooltip, Button } from 'antd';
 
 interface IСontacts {
-  key: number;
+  id: number;
   name: string;
   tel: string;
   email: string;
 }
 
-interface IContactEditProps {
-  oneContact: IСontacts;
-  handleEditContact: (
-    key: number,
+interface IContactEditAddProps {
+  oneContact?: IСontacts;
+  onToggleModal: () => void;
+  handleEditContact?: (
+    id: number,
     name: string,
     email: string,
     tel: string,
   ) => void;
+  handleAddContact?: (name: string, email: string, tel: string) => void;
+  loading: boolean;
 }
 
-const ContactEdit: React.FC<IContactEditProps> = ({
+const ContactEditAdd: React.FC<IContactEditAddProps> = ({
   oneContact,
+  onToggleModal,
   handleEditContact,
-  // loading,
-  // errload,
-  // setErrload,
-  // successLoad,
-  // setSuccessLoad,
-  // handleEditUserInfoUnderAdmin
+  handleAddContact,
+  loading,
 }) => {
   const [form] = Form.useForm();
-  console.log('oneContact  ', oneContact);
 
-  // useEffect(() => {
-  //   setErrload();
-  // }, [setErrload]);
-
-  // useEffect(() => {
-  //   setSuccessLoad();
-  // }, [setSuccessLoad]);
-
-  const onFinish = async (values: any) => {
-    console.log('valuesEdit', values);
-    handleEditContact(oneContact.key, values.name, values.email, values.tel);
-    form.resetFields();
+  const onFinish = (values: { name: string; email: string; tel: string }) => {
+    if (oneContact) {
+      handleEditContact &&
+        handleEditContact(oneContact.id, values.name, values.email, values.tel);
+      onToggleModal();
+    } else {
+      handleAddContact &&
+        handleAddContact(values.name, values.email, values.tel);
+      onToggleModal();
+    }
   };
 
   return (
@@ -53,12 +50,16 @@ const ContactEdit: React.FC<IContactEditProps> = ({
         name="contactEdit"
         onFinish={onFinish}
         scrollToFirstError
-        className="contactEdit-container"
-        initialValues={{
-          name: oneContact?.name,
-          email: oneContact?.email,
-          tel: oneContact?.tel,
-        }}>
+        className="contactEditAdd-container"
+        initialValues={
+          oneContact
+            ? {
+                name: oneContact?.name,
+                email: oneContact?.email,
+                tel: oneContact?.tel,
+              }
+            : { name: '', email: '', tel: '' }
+        }>
         <Tooltip placement="rightBottom" title="Имя">
           <Form.Item
             name="name"
@@ -70,10 +71,7 @@ const ContactEdit: React.FC<IContactEditProps> = ({
                 whitespace: true,
               },
             ]}>
-            <Input
-              placeholder="Имя"
-              // disabled={loading}
-            />
+            <Input placeholder="Имя" disabled={loading} />
           </Form.Item>
         </Tooltip>
 
@@ -90,10 +88,7 @@ const ContactEdit: React.FC<IContactEditProps> = ({
               message: 'Обязательное поле',
             },
           ]}>
-          <Input
-            placeholder={'Электронный адрес'}
-            // disabled={loading}
-          />
+          <Input placeholder={'Электронный адрес'} disabled={loading} />
         </Form.Item>
 
         <Tooltip placement="rightBottom" title="Телефон">
@@ -112,15 +107,12 @@ const ContactEdit: React.FC<IContactEditProps> = ({
                 message: 'Неверный формат',
               },
             ]}>
-            <Input
-              placeholder="Телефон"
-              // disabled={loading}
-            />
+            <Input placeholder="Телефон" disabled={loading} />
           </Form.Item>
         </Tooltip>
 
         <Form.Item>
-          <div className="contactAdd-containe__btnGroup">
+          <div className="contactEditAdd-containe__btnGroup">
             {/* {
             errload || successLoad ? (
               <>
@@ -128,11 +120,7 @@ const ContactEdit: React.FC<IContactEditProps> = ({
                 <div>{successLoad}</div>
               </>
             ) : ( */}
-            <Button
-              type="primary"
-              htmlType="submit"
-              // isabled={loading}
-            >
+            <Button type="primary" htmlType="submit" disabled={loading}>
               Сохранить
             </Button>
             {/* )} */}
@@ -144,27 +132,12 @@ const ContactEdit: React.FC<IContactEditProps> = ({
 };
 
 export default inject(({ UserStore }) => {
-  const {
-    oneUser,
-    handleEditContact,
-    userLang,
-    handleAddUserUnderAdmin,
-    handleAllUsers,
-    errload,
-    setErrload,
-    successLoad,
-    setSuccessLoad,
-  } = UserStore;
+  const { oneUser, handleEditContact, handleAddContact, loading } = UserStore;
 
   return {
     oneUser,
     handleEditContact,
-    userLang,
-    handleAddUserUnderAdmin,
-    handleAllUsers,
-    errload,
-    setErrload,
-    successLoad,
-    setSuccessLoad,
+    handleAddContact,
+    loading,
   };
-})(observer(ContactEdit));
+})(observer(ContactEditAdd));

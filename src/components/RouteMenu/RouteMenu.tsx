@@ -1,12 +1,11 @@
-import './RouteMenu.scss';
 import { inject, observer } from 'mobx-react';
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from '../Login/Login';
-import Empty from '../Pages/Empty/Empty';
-import Home from '../Pages/Home/Home';
-import Сontacts from '../Pages/Сontacts/Сontacts';
-import Auth from '../Auth/Auth';
+import Auth from '../Auth';
+import Login from '../Login';
+import Empty from '../Pages/Empty';
+import Home from '../Pages/Home';
+import Сontacts from '../Pages/Сontacts';
 
 interface IRouteMenuProps {
   loggedIn: boolean;
@@ -34,7 +33,7 @@ const RouteMenu: React.FC<IRouteMenuProps> = ({ loggedIn, handleLogin }) => {
                 userEmail={''}
                 userUsername={''}
                 logOut={function (): void {
-                  throw new Error('Функция не реализована.');
+                  throw new Error('Function not implemented');
                 }}
                 loading={false}
               />
@@ -46,9 +45,13 @@ const RouteMenu: React.FC<IRouteMenuProps> = ({ loggedIn, handleLogin }) => {
           path="/login"
           element={
             <Login
-              handleLogin={function (email: string, username: string): void {
-                throw new Error('Функция не реализована.');
+              handleLogin={function (
+                email: string,
+                username: string,
+              ): Promise<void> {
+                throw new Error('Function not implemented');
               }}
+              loading={false}
             />
           }
         />
@@ -62,7 +65,7 @@ const RouteMenu: React.FC<IRouteMenuProps> = ({ loggedIn, handleLogin }) => {
                 userEmail={''}
                 userUsername={''}
                 logOut={function (): void {
-                  throw new Error('Функция не реализована.');
+                  throw new Error('Function not implemented');
                 }}
                 loading={false}
               />
@@ -76,11 +79,14 @@ const RouteMenu: React.FC<IRouteMenuProps> = ({ loggedIn, handleLogin }) => {
             <Auth loggedIn={loggedIn}>
               <Сontacts
                 getContacts={function (): void {
-                  throw new Error('Функция не реализована.');
+                  throw new Error('Function not implemented');
                 }}
                 userContacts={[]}
                 loading={false}
                 errload={false}
+                handleDelleteContact={function (id: number): void {
+                  throw new Error('Function not implemented');
+                }}
               />
             </Auth>
           }

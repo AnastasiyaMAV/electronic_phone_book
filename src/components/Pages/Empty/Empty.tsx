@@ -1,6 +1,6 @@
+import './Empty.scss';
 import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import './Empty.scss';
 
 const Empty: React.FC = () => {
   const navigate = useNavigate();

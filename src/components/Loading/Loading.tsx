@@ -1,6 +1,6 @@
 import './Loading.scss';
-import { Spin } from 'antd';
 import React from 'react';
+import { Spin } from 'antd';
 
 const Loading: React.FC = () => (
   <div className="loading-container">

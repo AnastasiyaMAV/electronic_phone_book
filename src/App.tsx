@@ -1,8 +1,8 @@
 import './App.scss';
 import 'antd/dist/antd.min.css';
-import RouteMenu from './components/RouteMenu/RouteMenu';
+import RouteMenu from './components/RouteMenu';
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="app-container">
       <RouteMenu
