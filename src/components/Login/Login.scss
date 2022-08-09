@@ -1,8 +1,10 @@
+@import '../../assets/styles/mainStyle.scss';
+
 .login-container {
   max-width: 450px;
   width: 100%;
   padding: 20px;
-  border: 1px solid #c5c6c6;
+  border: 1px solid $gray1;
   border-radius: 25px;
 
   &:hover {

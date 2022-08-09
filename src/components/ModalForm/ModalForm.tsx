@@ -1,4 +1,3 @@
-import './ModalForm.scss';
 import { Modal } from 'antd';
 
 interface IModalForm {

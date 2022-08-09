@@ -1,8 +1,10 @@
+@import './assets/styles/mainStyle.scss';
+
 .app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #777a7e;
+  background-color: $gray;
 }

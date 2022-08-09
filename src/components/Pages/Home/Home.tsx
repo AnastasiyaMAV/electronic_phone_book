@@ -1,13 +1,15 @@
+import './Home.scss';
 import { Button, Card } from 'antd';
 import { inject, observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
-import './Home.scss';
+import Loading from '../../Loading/Loading';
 
 interface IHomeProps {
   userName: string;
   userEmail: string;
   userUsername: string;
   logOut: () => void;
+  loading: boolean;
 }
 
 const Home: React.FC<IHomeProps> = ({
@@ -15,6 +17,7 @@ const Home: React.FC<IHomeProps> = ({
   userEmail,
   userUsername,
   logOut,
+  loading,
 }) => {
   const navigate = useNavigate();
 
@@ -23,9 +26,13 @@ const Home: React.FC<IHomeProps> = ({
   };
 
   const handlerTransitionOut = () => {
-    navigate('/login');
+    navigate('/');
     logOut();
   };
+  
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Card title="Добро пожаловать!" bordered={false} style={{ width: 300 }}>
@@ -45,12 +52,13 @@ const Home: React.FC<IHomeProps> = ({
 };
 
 export default inject(({ UserStore }) => {
-  const { userName, userEmail, userUsername, logOut } = UserStore;
+  const { userName, userEmail, userUsername, logOut, loading } = UserStore;
 
   return {
     userName,
     userEmail,
     userUsername,
     logOut,
+    loading
   };
 })(observer(Home));

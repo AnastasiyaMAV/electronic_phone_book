@@ -1,8 +1,7 @@
+import './Login.scss';
 import { Button, Form, Input } from 'antd';
-
 import { inject, observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
-import './Login.scss';
 
 interface ILogin {
   handleLogin: (email: string, username: string) => void;
@@ -13,11 +12,10 @@ const Login: React.FC<ILogin> = ({ handleLogin }) => {
   const [form] = Form.useForm();
 
   const onFinish = async (values: { email: string; username: string }) => {
-    await handleLogin(values.email, values.username)
+    handleLogin(values.email, values.username)
     //@ts-ignore
       .then(() => navigate('/home'))
       .catch((err: any) => console.log(err));
-
   };
 
   return (

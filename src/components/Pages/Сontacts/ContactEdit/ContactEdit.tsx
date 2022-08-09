@@ -11,22 +11,26 @@ interface IСontacts {
 
 interface IContactEditProps {
   oneContact: IСontacts;
+  handleEditContact: (
+    key: number,
+    name: string,
+    email: string,
+    tel: string,
+  ) => void;
 }
 
-const ContactEdit: React.FC <IContactEditProps> = (
-  {
-    oneContact,
-    // loading,
-    // errload,
-    // setErrload,
-    // successLoad,
-    // setSuccessLoad,
-    // handleEditUserInfoUnderAdmin
-  },
-) => {
+const ContactEdit: React.FC<IContactEditProps> = ({
+  oneContact,
+  handleEditContact,
+  // loading,
+  // errload,
+  // setErrload,
+  // successLoad,
+  // setSuccessLoad,
+  // handleEditUserInfoUnderAdmin
+}) => {
   const [form] = Form.useForm();
   console.log('oneContact  ', oneContact);
-  
 
   // useEffect(() => {
   //   setErrload();
@@ -38,18 +42,7 @@ const ContactEdit: React.FC <IContactEditProps> = (
 
   const onFinish = async (values: any) => {
     console.log('valuesEdit', values);
-    // await handleEditUserInfoUnderAdmin(
-      // oneUser.key,
-    //   values.name,
-    //   values.email,
-    //   values.tel,
-    // )
-    //   .then(async () => {
-    //     await handleAllUsers(token);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    handleEditContact(oneContact.key, values.name, values.email, values.tel);
     form.resetFields();
   };
 
@@ -77,8 +70,9 @@ const ContactEdit: React.FC <IContactEditProps> = (
                 whitespace: true,
               },
             ]}>
-            <Input placeholder="Имя" 
-            // disabled={loading}
+            <Input
+              placeholder="Имя"
+              // disabled={loading}
             />
           </Form.Item>
         </Tooltip>
@@ -152,6 +146,7 @@ const ContactEdit: React.FC <IContactEditProps> = (
 export default inject(({ UserStore }) => {
   const {
     oneUser,
+    handleEditContact,
     userLang,
     handleAddUserUnderAdmin,
     handleAllUsers,
@@ -163,6 +158,7 @@ export default inject(({ UserStore }) => {
 
   return {
     oneUser,
+    handleEditContact,
     userLang,
     handleAddUserUnderAdmin,
     handleAllUsers,

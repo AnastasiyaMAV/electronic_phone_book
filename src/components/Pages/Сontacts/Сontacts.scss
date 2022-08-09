@@ -1,6 +1,7 @@
 @import '../../../assets/styles/mainStyle.scss';
 
 .contacts-container {
+  min-height: 90vh;
   width: calc(100vw - 150px);
   margin-top: 20px;
 }
