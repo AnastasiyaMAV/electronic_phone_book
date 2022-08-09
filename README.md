@@ -6,7 +6,7 @@
 
 1. <ins>Страница "Вход в личный кабинет" ("Login") </ins>. <br>
    _В данном разделе производится вход в линый кабинет пользователя_.<br>
-   _Данные о пользователях находятся в файле [username.txt](https://github.com/AnastasiyaMAV/test/blob/main/username.txt)_.<br>
+   _Данные о пользователях находятся в файле [username.txt](https://github.com/AnastasiyaMAV/electronic_phone_book/blob/main/username.txt)_.<br>
 
 2. <ins>Страница "Домашняя" ("Home")</ins>.<br>
    _Данный раздел приветственный. Также с него можно перейти в раздел "Контакты пользователя" или произвезти выход из кабинета_ <br>
