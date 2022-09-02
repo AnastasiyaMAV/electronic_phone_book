@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/electronic_phone_book/static/css/main.6d35bd0c.css",
+    "main.js": "/electronic_phone_book/static/js/main.e62390b8.js",
+    "static/js/787.74543412.chunk.js": "/electronic_phone_book/static/js/787.74543412.chunk.js",
+    "index.html": "/electronic_phone_book/index.html",
+    "main.6d35bd0c.css.map": "/electronic_phone_book/static/css/main.6d35bd0c.css.map",
+    "main.e62390b8.js.map": "/electronic_phone_book/static/js/main.e62390b8.js.map",
+    "787.74543412.chunk.js.map": "/electronic_phone_book/static/js/787.74543412.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6d35bd0c.css",
+    "static/js/main.e62390b8.js"
+  ]
+}
