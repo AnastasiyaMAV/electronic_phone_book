@@ -40,6 +40,23 @@ const RouteMenu: React.FC<IRouteMenuProps> = ({ loggedIn, handleLogin }) => {
             </Auth>
           }
         />
+        
+        <Route
+          path="electronic_phone_book/"
+          element={
+            <Auth loggedIn={loggedIn}>
+              <Home
+                userName={''}
+                userEmail={''}
+                userUsername={''}
+                logOut={function (): void {
+                  throw new Error('Function not implemented');
+                }}
+                loading={false}
+              />
+            </Auth>
+          }
+        />
 
         <Route
           path="/login"
