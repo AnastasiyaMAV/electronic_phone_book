@@ -35,9 +35,9 @@ v16.13.0
 
 #### Используемые технологии:
 
-- React
-- React Hooks
-- TypeScript
+- [React](https://ru.reactjs.org/)
+- [React Hooks](https://ru.reactjs.org/docs/hooks-intro.html)
+- [Typescript](https://www.typescriptlang.org/)
 - [React Router](https://v5.reactrouter.com/web/guides/quick-start)
 - [MobX](https://mobx.js.org/getting-started)
 - [SASS](https://sass-lang.com/)
